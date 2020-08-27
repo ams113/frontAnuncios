@@ -3,6 +3,8 @@
 
 La app esta compuesta por una vista principal y un nabvar. El navbar en la parte superior derecha te permite hacer un logout simulando la página de login, para volver a la página principal pulsar el botón azul. También el navbar contiene las distintas categorias de anuncios por si el usuario desea filtrarlas (No funcional). En la página principal del Muro de anuncios obtenemos el listado de anuncios relevantes mediante tarjetas. Si pinchamos en el link "más" nos aparece la página del detalle del anuncio. En la página principal tenemos el botón subir anuncio, que nos abre un modal con un formulario para subir un nuevo anuncio.
 
+Implementado con siguiendo el patrón de React.js funcional component. Siguiendo las recomendaciones de React
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
