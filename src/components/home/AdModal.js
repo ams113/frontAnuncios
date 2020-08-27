@@ -16,9 +16,10 @@ const customStyles = {
  
 Modal.setAppElement('#root');
 
-export const AdModal = () => {
+export const AdModal = ({ show }) => {
 
-  const [isOpen, setIsOpen] = useState( true );
+
+  const [isOpen, setIsOpen] = useState( show );
 
   const closeModal = () => {
     setIsOpen(false);
@@ -46,6 +47,7 @@ export const AdModal = () => {
   const handleSumitForm = (e) => {
     e.preventDefault();
     console.log(formState);
+    closeModal();
   };
 
     return (
