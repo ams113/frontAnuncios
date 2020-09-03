@@ -1,7 +1,13 @@
 import React, { useState }from 'react';
+import { Form, Button } from 'semantic-ui-react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import { useMutation } from '@apollo/client';
+import { UPLOADAD } from '../../gql/ad'; 
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import './modal.css';
+import './Home.scss';
  
 const customStyles = {
   content : {
@@ -16,28 +22,78 @@ const customStyles = {
  
 Modal.setAppElement('#root');
 
-export const AdModal = ({ show }) => {
+export const AdModal = ({ show, setShow }) => {
 
-
-  const [isOpen, setIsOpen] = useState( show );
+  const [uploadAd] = useMutation( UPLOADAD );
 
   const closeModal = () => {
-    setIsOpen(false);
+    setShow(false);
   };
+  
 
-  const [formState, setformState] = useState({
-      description:'',
-      type:'',
-      size:'',
-      km:'',
-      color:'',
-      fabricant:'',
-      height:'',
-  });
+  
 
-  const { description, type, size, km, color, fabricant, height} = formState;
+  const formik = useFormik({
+    initialValues: initFormValues(),
+    validationSchema: Yup.object({
+        type: Yup.string().required('Tipo requerido'),
+        description: Yup.string(),
+        size: Yup.number()
+          .typeError('Tiene que ser un numero')
+          .positive('Tiene que ser mayor que cero'),
+        km: Yup.number()
+          .typeError('Tiene que ser un numero')
+          .positive('Tiene que ser mayor que cero'),
+        fabricant: Yup.string(),
+        height:  Yup.number()
+          .typeError('Tiene que ser un numero')
+          .positive('Tiene que ser mayor que cero'),
+    }),
+    onSubmit: async ( formData ) => {
+          
+      try {
+          const newAd = formData;
 
-  const handleInputChange = ( { target } ) => {
+     
+
+          if (!newAd.size) {
+            delete newAd.size;
+          } else {
+            newAd.size = parseInt(newAd.size);
+          }
+          if (!newAd.km) {
+            delete newAd.km;
+          } else {
+            newAd.km = parseInt(newAd.km);
+          }
+          if (!newAd.height) {
+            delete newAd.height;
+          } else {
+            newAd.height = parseInt(newAd.height);
+          }
+
+          console.log(newAd);
+
+          await uploadAd({
+            variables: {
+                input: newAd
+            }
+        });
+
+        closeModal();
+        toast.success('Anuncio Subido');
+          
+          
+      } catch ( error ) {
+          console.log(error.message);
+          toast.error( error.message );
+      }
+  }
+});
+
+
+
+  /* const handleInputChange = ( { target } ) => {
     setformState({
       ...formState,
       [ target.name ]: target.value
@@ -48,12 +104,19 @@ export const AdModal = ({ show }) => {
     e.preventDefault();
     console.log(formState);
     closeModal();
-  };
+  }; */
+
+  const options = [
+    { key: 'p', text: 'Piso', value: 'PISO' },
+    { key: 'c', text: 'Chalet', value: 'CHALET' },
+    { key: 'v', text: 'Vehículo', value: 'VEHICULO' },
+    { key: 'f', text: 'Frigorífico', value: 'FRIGORIFICO' },
+  ]
 
     return (
         <div>
             <Modal
-            isOpen={ isOpen }
+            isOpen={ show }
             //onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStyles}
@@ -65,90 +128,105 @@ export const AdModal = ({ show }) => {
              <h2>Subir anuncio</h2>
              {/* <button onClick={closeModal}>close</button> */}
              <hr />
-             <form className="container" onSubmit={ handleSumitForm }>
 
-              <div className="form-group">
-                  <label>Tipo del anuncio</label>
-                  <input 
-                  className="form-control"
-                  type="text"
-                  name="type"
-                  value={type}
-                  onChange={handleInputChange} 
-                  placeholder="PISO, CHALET, VEHICULO o FRIGORIFICO" />
-              </div>
 
-              <div className="form-group">
-                  <label>Descripción</label>
-                  <textarea 
-                      type="text" 
-                      className="form-control"
-                      placeholder="..."
-                      rows="3"
-                      name="description"
-                      value={description}
-                      onChange={handleInputChange}  
-                  ></textarea>
-              </div>
+             <Form className="register-form" onSubmit={ formik.handleSubmit }>
+                {/* <Form.Select 
+                    fluid
+                    name="type.value"
+                    options={options}
+                    placeholder='Seleccione el tipo del anuncio'
+                    value={ formik.values.type.value } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.type}
+                /> */}
+                <Form.Input 
+                    type="text"
+                    placeholder="Tipo: PISO, CHALET, VEHICULO, FRIGORIFICO"
+                    name="type"
+                    value={ formik.values.type } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.type && true}
+                />
+                <Form.TextArea 
+                    type="text"
+                    placeholder="Descripción"
+                    name="description"
+                    value={ formik.values.userName }  
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.userName && true}
+                />
+                <Form.Input 
+                    type="text"
+                    placeholder="Metros cuadrados"
+                    name="size"
+                    value={ formik.values.size } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.size && true}
+                />
+                <Form.Input 
+                    type="text"
+                    placeholder="Kilómetros"
+                    name="km"
+                    value={ formik.values.km } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.km && true}
+                />
+                <Form.Input 
+                    type="text"
+                    placeholder="Color"
+                    name="color"
+                    value={ formik.values.color } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.color && true}
+                />
+                <Form.Input 
+                    type="text"
+                    placeholder="Fabricante"
+                    name="fabricant"
+                    value={ formik.values.fabricant } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.fabricant && true}
+                />
+                <Form.Input 
+                    type="text"
+                    placeholder="Altura"
+                    name="height"
+                    value={ formik.values.height } 
+                    onChange={ formik.handleChange }
+                    error={ formik.errors.height && true}
+                />
 
-              <div className="form-group">
-                  <small id="emailHelp" className="form-text text-muted">Información adicional</small>
-            
-                  <input 
-                  className="form-control"
-                  type="text"
-                  name="size"
-                  value={size}
-                  onChange={handleInputChange}  
-                  placeholder="Metros cuadrados" />
-              </div>
-              <div className="form-group">
-                  <input
-                   className="form-control"
-                   type="text"
-                   name="km"
-                   value={km}
-                   onChange={handleInputChange}   
-                   placeholder="Kilómetros" />
-              </div>
-              <div className="form-group">
-                  <input 
-                  className="form-control"
-                  type="text"
-                  name="color"
-                  value={color}
-                  onChange={handleInputChange}   
-                  placeholder="Color" />
-              </div>
-              <div className="form-group">
-                  <input 
-                  className="form-control"
-                  type="text"
-                  name="fabricant"
-                  value={fabricant}
-                  onChange={handleInputChange}  
-                  placeholder="Fabricante" />
-              </div>
-              <div className="form-group">
-                  <input 
-                  className="form-control"
-                  type="text"
-                  name="height"
-                  value={height}
-                  onChange={handleInputChange}  
-                  placeholder="Altura" />
-              </div>
+                <Button 
+                    type="submit"
+                    className="btn-submit"
+                >
+                    Subir Anuncio
+                </Button>
 
-              <button
-                  type="submit"
-                  className="btn btn-outline-primary btn-block"
-              >
-                  <i className="far fa-save"></i>
-                  <span> Subir </span>
-              </button>
+                {/* <Button 
+                    type="button"
+                    className="btn-reaset"
+                    onClick={formik.handleReset}
+                >
+                    Limpiar campos
+                </Button> */}
 
-              </form>
+            </Form>
+
         </Modal>
         </div>
     )
 }
+
+const initFormValues = () => {
+  return {
+    type:'',
+    description:'',
+    size: '',
+    km: '',
+    color:'',
+    fabricant:'',
+    height: '',
+  };
+};
