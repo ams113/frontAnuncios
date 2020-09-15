@@ -28,4 +28,11 @@ code {
     text-align: center;
     margin: 20px 0 0 0;
   }
+
+  .btn-primary {
+    width: 100%;
+    background-color: green;
+    color: $font-light;
+    margin-bottom: 20px;
+  }
 }

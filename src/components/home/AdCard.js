@@ -1,25 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import foto from '../../assets/png/not-found.png';
+import ImageNotFound from '../../assets/png/not-found.png';
 import './Home.scss';
+
 export const AdCard = ({
       id,
       description,
       type,
       score,
-      imageIds,
       size,
       km,
       color,
       fabricant,
       height,
+      img
     } ) => {
 
     return (
         <div className="card mb-3" style={{maxWidth: 540}}>
             <div className="row no-gutters">
                 <div className="col-md-4">
-                    <img src={foto} className="card-img img-md" alt={ type } />
+                    <img src={img ? img : ImageNotFound } className="card-img img-md" alt={ type } />
                 </div>
                 <div className="col-md-8">
                     <div className="card-body">

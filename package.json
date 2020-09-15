@@ -8,6 +8,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "apollo-client": "^2.6.10",
+    "apollo-link-context": "^1.0.20",
+    "apollo-upload-client": "^14.1.2",
     "formik": "^2.1.5",
     "graphql": "^15.3.0",
     "jwt-decode": "^2.2.0",

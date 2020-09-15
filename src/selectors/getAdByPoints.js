@@ -1,6 +1,6 @@
 import { data } from '../data/data';
 
-export const getAdByPoints = ( score ) => {
+export const getAdByPoints = ( score, list ) => {
 
-    return data.filter( ad =>  ad.score  >= 40 ).sort();
+    return list.filter( ad =>  ad.score  >= 40 );
 };

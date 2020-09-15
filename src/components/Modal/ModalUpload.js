@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Icon, Button, Dimmer, Loader } from 'semantic-ui-react';
 import './ModalUpload.scss';
 
+
 export const ModalUpload = ( { show, setShow } ) => {
 
     const onClose = ()=> {

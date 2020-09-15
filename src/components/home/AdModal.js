@@ -1,12 +1,15 @@
-import React, { useState }from 'react';
+import React, { useCallback, useState } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
-import { UPLOADAD } from '../../gql/ad'; 
-import ReactDOM from 'react-dom';
+import { UPLOADAD, UPDATE_AVATAR } from '../../gql/ad'; 
 import Modal from 'react-modal';
+import { useDropzone } from 'react-dropzone';
+
+
+
 import './Home.scss';
  
 const customStyles = {
@@ -22,15 +25,19 @@ const customStyles = {
  
 Modal.setAppElement('#root');
 
-export const AdModal = ({ show, setShow }) => {
+export const AdModal = ({ show, setShow, auth }) => {
+
+  const [updateAvatar] = useMutation( UPDATE_AVATAR );
+
+  const [loading, setLoading] = useState( false );
+
+  const [imagen, setImagen] = useState( null );
 
   const [uploadAd] = useMutation( UPLOADAD );
 
   const closeModal = () => {
     setShow(false);
   };
-  
-
   
 
   const formik = useFormik({
@@ -71,6 +78,9 @@ export const AdModal = ({ show, setShow }) => {
           } else {
             newAd.height = parseInt(newAd.height);
           }
+          if (imagen) {
+            newAd.img = imagen;
+          }
 
           console.log(newAd);
 
@@ -90,6 +100,41 @@ export const AdModal = ({ show, setShow }) => {
       }
   }
 });
+
+  const onDrop = useCallback( async ( acceptedFile ) => {
+      const file = acceptedFile[0];
+      console.log(file);
+      try {
+        setLoading( true );
+        const result = await updateAvatar( {
+          variables: { file }
+        });
+       
+          
+          const { data } = result;
+
+          if ( !data.updateAvatar.status ) {
+              
+              toast.warning('Error al subir imagen');
+              setLoading( false );
+          } else {
+
+              setImagen(data.updateAvatar.urlAvatar);
+              setLoading( false );
+              console.log(data);
+          } 
+ 
+      } catch (error) {
+          console.log(error);
+      }
+    }, []);
+
+    const { getRootProps, getInputProps } = useDropzone( {
+      accept: 'image/jpeg, image/png',
+      noKeyboard: true,
+      multiple: false,
+      onDrop,
+    });
 
 
 
@@ -197,6 +242,15 @@ export const AdModal = ({ show, setShow }) => {
                     error={ formik.errors.height && true}
                 />
 
+                <Button
+                type="button" 
+                className="btn-primary"
+                { ...getRootProps() } 
+                loading={ loading } >
+                  Añadir imagen
+                </Button>
+                
+
                 <Button 
                     type="submit"
                     className="btn-submit"
@@ -204,13 +258,7 @@ export const AdModal = ({ show, setShow }) => {
                     Subir Anuncio
                 </Button>
 
-                {/* <Button 
-                    type="button"
-                    className="btn-reaset"
-                    onClick={formik.handleReset}
-                >
-                    Limpiar campos
-                </Button> */}
+                <input { ...getInputProps() } />
 
             </Form>
 

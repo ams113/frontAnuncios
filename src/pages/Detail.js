@@ -1,19 +1,34 @@
 import React from 'react';
 import { useParams,  Redirect } from 'react-router-dom';
 import { getAdById } from '../selectors/getAdById';
-import foto from '../assets/png/not-found.png';
+import { useQuery } from '@apollo/client';
+import { GET_AD } from '../gql/ad';
+import ImageNotFound from '../assets/png/not-found.png';
 
 export const Detail = ({ history }) => {
     
-    const { id } = useParams();
     
-    if ( !id ) {
+    const { id } = useParams();
+    console.log(id);
+
+    const { data, error, loading } = useQuery( GET_AD, {
+        variables: { id }
+    });
+
+    if ( loading ) return null;
+    
+    if ( error ) {
         return <Redirect to="/" />;
     }
-    
-    const ad = getAdById( id );
 
-    if ( !ad ) {
+
+    const { getAd } = data;
+
+    console.log(getAd);
+
+     // const ad = getAdById( id );
+
+    if ( !getAd ) {
         return <Redirect to="/" />;
     }
 
@@ -30,19 +45,19 @@ export const Detail = ({ history }) => {
             description,
             type,
             score,
-            imageIds,
+            img,
             size,
             km,
             color,
             fabricant,
             height,
-    } = ad;
+    } = getAd;
 
     return (
         <div className="row mt-5">
         <div className="col-4">
             <img
-                src={ foto }
+                src={img ? img : ImageNotFound }
                 alt={ type }
                 className= "img-thumbnail animate__animated animate__bounce animate__animate__fadeInDown"
             />
