@@ -1,7 +1,19 @@
 ## Descripción
 
-La app esta compuesta por una vista principal y un nabvar. El navbar en la parte superior derecha te permite hacer un logout simulando la página de login, para volver a la página principal pulsar el botón azul. También el navbar contiene las distintas categorias de anuncios por si el usuario desea filtrarlas (No funcional). En la página principal del Muro de anuncios obtenemos el listado de anuncios relevantes mediante tarjetas. Si pinchamos en el link "más" nos aparece la página del detalle del anuncio. En la página principal tenemos el botón subir anuncio, que nos abre un modal con un formulario para subir un nuevo anuncio.
+La app esta compuesta por una vista pública de acceso y otra privada una vez identificado el usuario.
 
+Pasos a seguir:
+
+- Primero el usuario debe de registarse introduciendo los datos en el formulario de registro correctamente.
+- Una vez registrado el usuario podra acceder a la app de anuncios con su email y password.
+- En la app prodra consultar los anuncios más relevantes y subir anuncios mediante un modal.
+- En el modal rellenas el formulario con la información del anuncio para poder publicarlo.
+- El modal debaría de tener un Dropzone donde arrastrar las imágenes.
+
+La comunicación con la api se hace via apollo-client.
+
+## Despliegue 
+ docker run --name anuncios-app -p 3000:3000 -d anuncios-app  
 
 
 
