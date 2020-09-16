@@ -25,7 +25,7 @@ const customStyles = {
  
 Modal.setAppElement('#root');
 
-export const AdModal = ({ show, setShow, auth }) => {
+export const AdModal = ({ show, setShow, auth, refetch }) => {
 
   const [updateAvatar] = useMutation( UPDATE_AVATAR );
 
@@ -89,7 +89,7 @@ export const AdModal = ({ show, setShow, auth }) => {
                 input: newAd
             }
         });
-
+        refetch();
         closeModal();
         toast.success('Anuncio Subido');
           

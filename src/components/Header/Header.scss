@@ -15,4 +15,14 @@
             height: 25px;
         }
     }
+
+    .ui.button {
+        background-color: $background-light;
+        border-bottom: transparent;
+        border-radius: 0;
+
+        &:hover {
+            background-color: $background-light;
+        }
+    }
 }

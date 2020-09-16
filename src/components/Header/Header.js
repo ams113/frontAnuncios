@@ -1,11 +1,24 @@
 import React from 'react';
-import { Container, Grid, Image } from 'semantic-ui-react';
+import { Container, Grid, Image, Button } from 'semantic-ui-react';
 import Logo from "../../assets/png/instaclone.png";
 import './Header.scss';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useApolloClient } from '@apollo/client';
+import useAuth from '../../hook/useAuth';
 
 
 export const Header = () => {
+
+    const client = useApolloClient();
+    const { logout } = useAuth();
+    const history = useHistory();
+
+    const onLogout = () => {
+        client.clearStore();
+        logout();
+        history.push('/');
+        
+    };
     return (
         <div className="header">
             <Container>
@@ -19,7 +32,7 @@ export const Header = () => {
                         <p>Buscador</p>
                     </Grid.Column>
                     <Grid.Column width={ 3 } >
-                        <p>Opciones</p>
+                        <Button size="small" onClick={ onLogout }>Logout</Button>
                     </Grid.Column>
                 </Grid>
             </Container>
