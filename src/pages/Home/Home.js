@@ -47,7 +47,7 @@ export const Home = () => {
             </div>
             <div className="mt-5">
                 <AdList type={ 40 } list={getAds} />
-                <AdModal show={showModal} setShow={setShowModal} auth={ auth } refech={ refetch } />
+                <AdModal show={showModal} setShow={setShowModal} auth={ auth } refetch={ refetch } />
             </div>
             
         </div>
