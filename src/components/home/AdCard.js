@@ -18,16 +18,12 @@ export const AdCard = ({
 
     return (
         <div className="card mb-3" style={{maxWidth: 540}}>
-            <div className="row no-gutters">
-                <div className="col-md-4">
-                    <img src={img ? img : ImageNotFound } className="card-img img-md" alt={ type } />
-                </div>
-                <div className="col-md-8">
+                    <img src={img ? img : ImageNotFound } className="card-img-top" alt={ type } />
                     <div className="card-body">
                         <h6 className="card-title">{ type }</h6>
                         
                         {
-                            (description && <p className="card-text"><b>Descripción:</b> { description.slice(0,30) }...</p>)
+                            (description && <p className="card-text"><b>Descripción:</b> { description }</p>)
                         }
                       {/*   {
                             (size && <p className="card-text"><b>m<sup>2</sup>:</b> { size }</p>)
@@ -50,8 +46,6 @@ export const AdCard = ({
                         </Link>
                     
                     </div>
-                </div>
-            </div>
         </div>
     )
 }
