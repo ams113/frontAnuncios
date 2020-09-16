@@ -13,7 +13,7 @@ Pasos a seguir:
 La comunicación con la api se hace via apollo-client.
 
 ## Despliegue 
- docker run --name anuncios-app -p 3000:3000 -d anuncios-app  
+ docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3000:3000 -e CHOKIDAR_USEPOLLING=true [user]/anuncios-app
 
 
 
